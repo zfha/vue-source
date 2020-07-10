@@ -33,6 +33,7 @@ export function initLifecycle(vm: Component) {
   const options = vm.$options;
 
   // locate first non-abstract parent
+  // 将组件存储到parent中
   let parent = options.parent;
   if (parent && !options.abstract) {
     while (parent.$options.abstract && parent.$parent) {
@@ -56,6 +57,7 @@ export function initLifecycle(vm: Component) {
 }
 
 export function lifecycleMixin(Vue: Class<Component>) {
+  // 更新节点
   Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
     const vm: Component = this;
     const prevEl = vm.$el;
@@ -99,6 +101,7 @@ export function lifecycleMixin(Vue: Class<Component>) {
     if (vm._isBeingDestroyed) {
       return;
     }
+    // 调用 beforeDestroy 钩子
     callHook(vm, "beforeDestroy");
     vm._isBeingDestroyed = true;
     // remove self from parent
@@ -107,6 +110,7 @@ export function lifecycleMixin(Vue: Class<Component>) {
       remove(parent.$children, vm);
     }
     // teardown watchers
+    // 该组件下的所有Watcher从其所在的Dep中释放
     if (vm._watcher) {
       vm._watcher.teardown();
     }
@@ -124,8 +128,10 @@ export function lifecycleMixin(Vue: Class<Component>) {
     // invoke destroy hooks on current rendered tree
     vm.__patch__(vm._vnode, null);
     // fire destroyed hook
+    // 调用destroyed钩子
     callHook(vm, "destroyed");
     // turn off all instance listeners.
+    // 移除所有的事件
     vm.$off();
     // remove __vue__ reference
     if (vm.$el) {

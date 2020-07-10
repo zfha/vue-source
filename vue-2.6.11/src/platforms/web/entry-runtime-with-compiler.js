@@ -19,7 +19,7 @@ const idToTemplate = cached((id) => {
 });
 
 // 之前的mount，之前的mount方法不带模板编译功能
-const mount = Vue.prototype.$mount;
+const mount = Vue.prototype.$mount
 
 // 准备在之前的mount里面增加新功能【带模板编译功能】，装饰器模式
 Vue.prototype.$mount = function (
